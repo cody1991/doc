@@ -1,10 +1,12 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Req } from '@nestjs/common';
+import { Request } from 'express';
 
 // 整体路由的控制
 @Controller('cats')
 export class CatsController {
   @Get()
-  findAll(): string {
+  findAll(@Req() request: Request): string {
+    console.log('request', request.body);
     return 'This action returns all cats';
   }
 
