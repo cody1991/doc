@@ -8,6 +8,7 @@ import {
   Header,
   Redirect,
   Param,
+  HttpStatus,
   Body,
 } from '@nestjs/common';
 import { Request, Response } from 'express';
@@ -49,5 +50,15 @@ export class CatsController {
   findOne(@Param('id') id: string): string {
     console.log(id);
     return `This action returns a #${id} cat`;
+  }
+
+  @Post('haha')
+  create2(@Res() res: Response) {
+    res.status(HttpStatus.CREATED).send();
+  }
+
+  @Post('haha2')
+  create3(@Res() res: Response) {
+    res.status(HttpStatus.OK).json([]);
   }
 }
