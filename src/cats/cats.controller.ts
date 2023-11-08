@@ -12,9 +12,9 @@ import {
   Body,
 } from '@nestjs/common';
 import { Request, Response } from 'express';
-import { CreateCatDto } from './create-cat.dto';
+import { CreateCatDto } from './dto/create-cat.dto';
 import { CatsService } from './cats.service';
-import { Cat } from './interface/cat.interface';
+import { Cat } from './interfaces/cat.interface';
 
 // 整体路由的控制
 @Controller('cats')
