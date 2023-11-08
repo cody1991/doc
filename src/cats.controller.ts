@@ -13,10 +13,14 @@ import {
 } from '@nestjs/common';
 import { Request, Response } from 'express';
 import { CreateCatDto } from './create-cat.dto';
+import { CatsService } from './cats.service';
+import { Cat } from './interface/cat.interface';
 
 // 整体路由的控制
 @Controller('cats')
 export class CatsController {
+  constructor(private catsService: CatsService) {}
+
   @Get()
   @Header('Cache-Control', 'none')
   @HttpCode(204)
@@ -46,12 +50,6 @@ export class CatsController {
     return [];
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string): string {
-    console.log(id);
-    return `This action returns a #${id} cat`;
-  }
-
   @Post('haha')
   create2(@Res() res: Response) {
     res.status(HttpStatus.CREATED).send();
@@ -60,5 +58,21 @@ export class CatsController {
   @Post('haha2')
   create3(@Res() res: Response) {
     res.status(HttpStatus.OK).json([]);
+  }
+
+  @Post('new1')
+  async createN(@Body() createCatDto: CreateCatDto) {
+    this.catsService.create(createCatDto);
+  }
+
+  @Get('new1')
+  async findAllN(): Promise<Cat[]> {
+    return this.catsService.findAll();
+  }
+
+  @Get(':id')
+  findOne(@Param('id') id: string): string {
+    console.log(id);
+    return `This action returns a #${id} cat`;
   }
 }
