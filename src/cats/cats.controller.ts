@@ -14,13 +14,15 @@ import {
   BadRequestException,
   UseFilters,
   ParseIntPipe,
+  UsePipes,
 } from '@nestjs/common';
 import { Request, Response } from 'express';
-import { CreateCatDto } from './dto/create-cat.dto';
+import { CreateCatDto, createCatSchema } from './dto/create-cat.dto';
 import { CatsService } from './cats.service';
 import { Cat } from './interfaces/cat.interface';
 import { ForbiddenException } from 'src/common/exception/forbidden.exception';
 import { HttpExceptionFilter } from 'src/common/exception/http-exception.filter';
+import { ZodValidationPipe } from 'src/common/pipe/zodvalidation.pipe';
 
 // 整体路由的控制
 @Controller('cats')
@@ -46,6 +48,7 @@ export class CatsController {
   }
 
   @Post()
+  @UsePipes(new ZodValidationPipe(createCatSchema))
   async create(@Body() createCatDto: CreateCatDto) {
     console.log('createCatDto', createCatDto, createCatDto.age);
     return 'This action adds a new cat';
