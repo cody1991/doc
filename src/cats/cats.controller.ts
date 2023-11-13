@@ -13,6 +13,7 @@ import {
   HttpException,
   BadRequestException,
   UseFilters,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { Request, Response } from 'express';
 import { CreateCatDto } from './dto/create-cat.dto';
@@ -102,8 +103,16 @@ export class CatsController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string): string {
-    console.log(id);
+  findOne(
+    @Param(
+      'id',
+      new ParseIntPipe({
+        errorHttpStatusCode: HttpStatus.NOT_ACCEPTABLE,
+      }),
+    )
+    id: number,
+  ): string {
+    console.log(id, typeof id);
     return `This action returns a #${id} cat`;
   }
 }
