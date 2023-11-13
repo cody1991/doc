@@ -10,11 +10,16 @@ import {
   Param,
   HttpStatus,
   Body,
+  HttpException,
+  BadRequestException,
+  UseFilters,
 } from '@nestjs/common';
 import { Request, Response } from 'express';
 import { CreateCatDto } from './dto/create-cat.dto';
 import { CatsService } from './cats.service';
 import { Cat } from './interfaces/cat.interface';
+import { ForbiddenException } from 'src/common/exception/forbidden.exception';
+import { HttpExceptionFilter } from 'src/common/exception/http-exception.filter';
 
 // 整体路由的控制
 @Controller('cats')
@@ -68,6 +73,32 @@ export class CatsController {
   @Get('new1')
   async findAllN(): Promise<Cat[]> {
     return this.catsService.findAll();
+  }
+
+  @Get('error')
+  async error() {
+    // throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
+
+    // throw new HttpException(
+    //   {
+    //     status: HttpStatus.FORBIDDEN,
+    //     error: 'This is a custom message',
+    //   },
+    //   HttpStatus.FORBIDDEN,
+    // );
+
+    // throw new ForbiddenException();
+
+    throw new BadRequestException('Something bad happened', {
+      cause: new Error(),
+      description: 'Some error description',
+    });
+  }
+
+  @Post('exception')
+  @UseFilters(new HttpExceptionFilter())
+  async exception(@Body() createCatDto: CreateCatDto) {
+    throw new ForbiddenException();
   }
 
   @Get(':id')
